@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <title>Document</title>
+    </head>
+    <style>
+    .swiper_container {
+        position: absolute;
+        top:0px;
+        left:0px;
+        right: 0px;
+        bottom: 0px;
+        background-repeat: no-repeat;
+        background-position: center;
+        background-size: contain;
+       
+    }
+    #main{
+        position: relative;
+        width: 400px;
+        height: 320px;
+         background: #000;
+        border: 1px solid red;
+    }
+</style>
+    <body>
+        <div id="main">
+
+        </div>
+    </body>
+    <script>
+    var elContainer = document.getElementById("main"), _imageEl = null, animaitionFinshed = false;
+    /**
+        * 播放图片
+        */
+    function playImage(src) {
+        if (animaitionFinshed) return;
+        if (!_imageEl) {
+            _imageEl = document.createElement('div')
+            _imageEl.className = `swiper_container`;
+            _imageEl.style.backgroundImage = `url(${src.url})`;
+            _imageEl.setAttribute("data-img", src.url);
+            elContainer.appendChild(_imageEl);
+        } else {
+            animaitionFinshed = true;
+            let width = elContainer.clientWidth, height = elContainer.clientHeight;
+            let preImage = _imageEl.getAttribute("data-img");
+            _imageEl.style.backgroundImage = `url(${preImage}),url(${src.url}) `;
+            _imageEl.style.backgroundPositionX = `center,${width + 20}px`;
+            setTimeout(() => {
+                _imageEl.style.transition = "all 0.8s ease";
+                _imageEl.style.backgroundPositionX = `-${width + 20}px,center`;
+            }, 0);
+
+            setTimeout(() => {
+                _imageEl.style.transition = "none";
+                _imageEl.style.backgroundImage = `url(${src.url}) `;
+                _imageEl.style.backgroundPositionX = `center`;
+                _imageEl.setAttribute("data-img", src.url)
+                animaitionFinshed = false;
+            }, 800)
+        }
+    }
+    var urls = ["http://pic16.nipic.com/20111006/6239936_092702973000_2.jpg", "http://pic33.nipic.com/20131007/13639685_123501617185_2.jpg", "http://pic51.nipic.com/file/20141025/8649940_220505558734_2.jpg"];
+    // debugger
+    let i=0;
+    setInterval(() => {
+        playImage({url:urls[i%3]})
+        i++;
+    }, 3000);
+</script>
+</html>
